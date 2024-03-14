@@ -1,0 +1,58 @@
+# networks:
+#   omoreno-net:
+#     name: omoreno-net
+#     driver: bridge
+
+services:
+  mypython:
+    container_name: mypython_inst
+    build: 
+      context: .
+    image: mypython
+    ports:
+    - 8000:8000
+    # volumes:
+    # - wordpress_data:/var/www/html
+    restart: always
+    # networks:
+    # - omoreno-net
+#   mariadb:
+#     container_name: mariadb
+#     build:
+#       context: ./requirements/mariadb
+#     image: mariadb
+#     volumes:
+#     - mariadb_data:/var/lib/mysql
+#     restart: always
+#     networks:
+#     - omoreno-net
+#     env_file:
+#     - .env
+#   wordpress:
+#     container_name: wordpress
+#     build: ./requirements/wordpress
+#     image: wordpress
+#     depends_on:
+#     - mariadb
+#     volumes:
+#     - wordpress_data:/var/www/html
+#     restart: always
+#     networks:
+#     - omoreno-net
+#     env_file:
+#     - .env
+
+# volumes:
+#   mariadb_data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /home/omoreno-/data/mysql
+#       o: bind
+
+#   wordpress_data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /home/omoreno-/data/wordpress
+#       o: bind
