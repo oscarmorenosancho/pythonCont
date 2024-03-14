@@ -4,10 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .tokens import *
 from .models import Token
+from transcendence.settings import SECRET_KEY
 
 import json
-
-LOCAL_SECRET='secret'
 
 # Create your views here.
 def info(request):
@@ -74,10 +73,10 @@ def signupToken(request):
             return JsonResponse( ret )
         usr.save()
         ret['username'] = usr.get_username()
-        ret['access'] = getToken({'username': usr.get_username() }, LOCAL_SECRET)
+        ret['access'] = getToken({'username': usr.get_username() }, SECRET_KEY)
         appendTokenInDb(owner=login_username, token=ret['access'])
         print (ret)
-        ret['refresh'] = getToken({'username': usr.get_username() }, LOCAL_SECRET)
+        ret['refresh'] = getToken({'username': usr.get_username() }, SECRET_KEY)
         appendTokenInDb(owner=login_username, token=ret['refresh'])
         print(ret)
         return JsonResponse( ret )
@@ -95,9 +94,9 @@ def loginToken(request):
         if (not usr or not usr.check_password(login_password)):
             ret = { 'errormsg': 'Either username or password are incorrect' }
             return JsonResponse( ret )
-        ret['access'] = getToken({'username': login_username }, LOCAL_SECRET, True)
+        ret['access'] = getToken({'username': login_username }, SECRET_KEY, True)
         appendTokenInDb(owner=login_username, token=ret['access'])
-        ret['refresh'] = getToken({'username': login_username }, LOCAL_SECRET, False)
+        ret['refresh'] = getToken({'username': login_username }, SECRET_KEY, False)
         appendTokenInDb(owner=login_username, token=ret['refresh'])
         ret['username'] = login_username
         print({ **request.POST, **ret })
@@ -111,13 +110,13 @@ def refreshToken(request):
     if (request.method == 'POST'):
         body_data = json.loads(request.body)
         refreshToken = body_data['refresh']
-        decoded_data = verifyToken(refreshToken, LOCAL_SECRET)
+        decoded_data = verifyToken(refreshToken, SECRET_KEY)
         username = decoded_data['username']
         tokentype = decoded_data['tokentype']
         if tokentype == 'refresh' and username:
-            ret['access'] = getToken({'username': username }, LOCAL_SECRET, True)
+            ret['access'] = getToken({'username': username }, SECRET_KEY, True)
             appendTokenInDb(owner=username, token=ret['access'])
-            ret['refresh'] = getToken({'username': username }, LOCAL_SECRET, False)
+            ret['refresh'] = getToken({'username': username }, SECRET_KEY, False)
             appendTokenInDb(owner=username, token=ret['refresh'])
             ret['username'] = username
             return JsonResponse( ret )
@@ -132,7 +131,7 @@ def logoutToken(request):
     if (request.method == 'POST'):
         body_data = json.loads(request.body)
         accessToken = body_data['access']
-        decoded_data = verifyToken(accessToken, LOCAL_SECRET)
+        decoded_data = verifyToken(accessToken, SECRET_KEY)
         username = decoded_data['username']
         tokentype = decoded_data['tokentype']
         if tokentype == 'access' and username:

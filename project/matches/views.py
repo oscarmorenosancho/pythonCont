@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from .models import Match
 from django.contrib.auth.models import User
 from docu.tokens import verifyToken
-from docu.views import LOCAL_SECRET
+from transcendence.settings import SECRET_KEY
 
 # Create your views here.
 def allMatchs(response):
@@ -11,7 +11,7 @@ def allMatchs(response):
         pref, token = token.split(' ')
         if (pref != 'Bearer'):
             return JsonResponse({'errormsg': 'Authorization Bearer not found'})
-        token_data = verifyToken(token, LOCAL_SECRET)
+        token_data = verifyToken(token, SECRET_KEY)
         token_data_keys = [*token_data.keys()]
         print(token_data_keys)
         if token_data_keys.count('errormsg') > 0:
