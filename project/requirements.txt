@@ -1,7 +1,7 @@
 asgiref==3.7.2
 certifi==2024.2.2
 cffi==1.16.0
-channels==4.0.0
+channels==3.0.5
 charset-normalizer==3.3.2
 cryptography==42.0.5
 Django==4.0.3

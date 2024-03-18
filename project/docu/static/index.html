@@ -227,7 +227,7 @@
 			console.log (base_url);
 			const token = 'omoreno-';
 			
-			const websocket = new WebSocket( 'ws://' + base_url + '/api/?token=' + token )
+			const websocket = new WebSocket( 'ws://' + base_url + '/ws/?token=' + token )
 			
 			websocket.onopen = function(event){
 				console.log('client says connection opened')
