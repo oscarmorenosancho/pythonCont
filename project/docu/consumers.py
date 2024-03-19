@@ -14,12 +14,22 @@ class JoinAndLeave(AsyncWebsocketConsumer):
                 self.group_name,
                 {
                     'type': 'channel_msg',
-                    'msg': "Server sends Welcome to channel"
+                    'msg': { "primary": "Server sends Welcome to channel" }
                 }
             )
 
     async def receive(self, text_data=None, bytes_data=None):
         print("server says client message received: ", text_data)
+        payload = json.loads(text_data)
+        if 'disconnect' in payload:
+            print("who disconnects: ", payload['disconnect'])
+            await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'channel_msg',
+                        'msg': { 'disconnect':  payload['disconnect'] }
+                    }
+                )
 
     async def channel_msg(self, event):
         msg = event['msg']

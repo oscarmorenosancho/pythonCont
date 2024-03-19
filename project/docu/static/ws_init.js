@@ -2,6 +2,7 @@ let websocket;
 
 function ws_init(username)
 {
+	let usrname = username;
 	const base_url = window.location.protocol.replace('http', 'ws') + '//' +
 		window.location.hostname + ":" + window.location.port;
 
@@ -15,13 +16,18 @@ function ws_init(username)
 			console.log(data['username'], 'says connection opened');
 		else
 			console.log('unlogged client says connection opened');
-		websocket.send("Client sends Welcome")
+		websocket.send( JSON.stringify({'msg': "Client sends Welcome"}))
 	}
 	
 	websocket.onmessage = function(event){
 		console.log("message received: ", event)
 		data = JSON.parse(event.data)
-		console.log(event.data)
+		data = data['msg'];
+		console.log(data);
+		if (data['primary'])
+			console.log("the message sent is:", data['primary']);
+		if (data['disconnect'])
+			console.log("disconnection of user:", data['disconnect']);
 	}
 	
 	websocket.onclose = function(event){

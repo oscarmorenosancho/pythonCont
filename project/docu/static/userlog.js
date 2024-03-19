@@ -110,8 +110,10 @@ requestRefreshFromForm = async (e) =>
 
 requestLogout = async (e) => {
 	e.preventDefault()
-	data = await localStorage.getItem("transcendence")
-	data = JSON.parse(data);
+	let data = await localStorage.getItem("transcendence")
+	data = JSON.parse( data );
+	let datasnd = JSON.stringify({ "disconnect": data.username });
+	websocket.send( datasnd );
 	if (! data || !data['access'])
 	{
 		localStorage.removeItem("transcendence");
