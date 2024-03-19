@@ -227,7 +227,7 @@
 			console.log (base_url);
 			const token = 'omoreno-';
 			
-			const websocket = new WebSocket( 'ws://' + base_url + '/ws/?token=' + token )
+			const websocket = new WebSocket( 'ws://' + base_url + '/ws/')
 			
 			websocket.onopen = function(event){
 				console.log('client says connection opened')
@@ -235,8 +235,16 @@
 			}
 			
 			websocket.onmessage = function(event){
-				console.log("client says server message received: ", event)
+				console.log("message received: ", event)
+				data = JSON.parse.data
+				console.log(data)
+
 			}
+
+			websocket.onclose = function(event){
+				console.log('client says connection closed')
+			}
+
 		}
 
 		startPage();
