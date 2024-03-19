@@ -1,6 +1,6 @@
 refreshVisibility = async () => 
 {
-	data = await localStorage.getItem("transcendence")
+	data = localStorage.getItem("transcendence")
 	data = JSON.parse(data);
 	const notlogged = (! data || !data['access'] || !data['refresh'] || !data['username'])
 	SignupEl.style.display = !notlogged ? "none" : "block";
@@ -9,9 +9,20 @@ refreshVisibility = async () =>
 	LogoutEl.style.display = notlogged ? "none" : "block";
 	UserBoxEl.style.display = notlogged ? "none" : "block";
 	if (!data || !data['username'])
+	{
 		UserDisplayEl.innerText = "null";
+		if (websocket)
+		{
+			websocket.close();
+			websocket = undefined;
+		}
+	}
 	else
-		UserDisplayEl.innerText = data['username'];
+	{
+		const usrname = data['username']
+		UserDisplayEl.innerText = usrname;
+		ws_init(usrname);
+	}
 }
 
 startPage = async (e) => {
@@ -21,7 +32,6 @@ startPage = async (e) => {
 	LogoutEl.addEventListener("submit", requestLogout);
 
 	await refreshVisibility();
-	ws_init();
 }
 
 startPage();
