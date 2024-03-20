@@ -34,8 +34,18 @@ startPage = async (e) => {
 	LoginEl.addEventListener("submit", requestLogin );
 	RefreshEl.addEventListener("submit", requestRefreshFromForm);
 	LogoutEl.addEventListener("submit", requestLogout);
-
 	await refreshVisibility(false);
+	const ContentSpaceEl = document.getElementById("content_space");
+	const url="/matches/"
+	fetchGET(url).then(
+		async (resp) => {
+			// let or = {}
+			// Object.keys(resp).forEach( (obkey) => {
+			// 	or[obkey] = resp[obkey];
+			// });
+			ContentSpaceEl.innerHTML = JSON.stringify(resp);
+		}
+	);
 }
 
 startPage();
