@@ -1,4 +1,4 @@
-refreshVisibility = async () => 
+refreshVisibility = async (isTokenRefresh = false) => 
 {
 	data = localStorage.getItem("transcendence")
 	data = JSON.parse(data);
@@ -21,7 +21,11 @@ refreshVisibility = async () =>
 	{
 		const usrname = data['username']
 		UserDisplayEl.innerText = usrname;
-		ws_init(usrname);
+		if (!isTokenRefresh)
+		{
+			console.log('in refreshVisibility ws init');
+			ws_init(usrname);
+		}
 	}
 }
 
@@ -31,7 +35,7 @@ startPage = async (e) => {
 	RefreshEl.addEventListener("submit", requestRefreshFromForm);
 	LogoutEl.addEventListener("submit", requestLogout);
 
-	await refreshVisibility();
+	await refreshVisibility(false);
 }
 
 startPage();

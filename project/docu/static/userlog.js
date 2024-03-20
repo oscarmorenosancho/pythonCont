@@ -1,4 +1,5 @@
 let myInterval;
+let refreshTime = 240000;
 
 SignupEl = document.getElementById("signupForm");
 LoginEl = document.getElementById("loginForm");
@@ -33,8 +34,8 @@ requestSignup = async (e) => {
 		else
 			localStorage.removeItem("transcendence");
 		e.target.reset();
-		await refreshVisibility();
-		myInterval = setInterval(requestRefresh, 10000);
+		await refreshVisibility(false);
+		myInterval = setInterval(requestRefresh, refreshTime);
 	});
 }
 
@@ -65,13 +66,13 @@ requestLogin = async (e) => {
 		else
 			localStorage.removeItem("transcendence");
 		e.target.reset();
-		await refreshVisibility();
-		myInterval = setInterval(requestRefresh, 240000);
+		await refreshVisibility(false);
+		myInterval = setInterval(requestRefresh, refreshTime);
 	});
 }
 
 requestRefresh = async () => {
-	data = await localStorage.getItem("transcendence")
+	data = localStorage.getItem("transcendence")
 	data = JSON.parse(data);
 	if (! data || !data['refresh'])
 	{
@@ -98,7 +99,11 @@ requestRefresh = async () => {
 		}
 		else
 			localStorage.removeItem("transcendence");
-		await refreshVisibility();
+		console.log('refreshed token')
+		if (myInterval)
+			clearInterval(myInterval);
+		myInterval = setInterval(requestRefresh, refreshTime);
+		await refreshVisibility(true);
 	});
 }
 
@@ -110,7 +115,7 @@ requestRefreshFromForm = async (e) =>
 
 requestLogout = async (e) => {
 	e.preventDefault()
-	let data = await localStorage.getItem("transcendence")
+	let data = localStorage.getItem("transcendence")
 	data = JSON.parse( data );
 	let datasnd = JSON.stringify({ "disconnect": data.username });
 	websocket.send( datasnd );
@@ -126,7 +131,7 @@ requestLogout = async (e) => {
 		console.log(obkey, ":", content[obkey].toString())
 		});
 		localStorage.removeItem("transcendence");
-		await refreshVisibility();
+		await refreshVisibility(false);
 		if (myInterval)
 			clearInterval(myInterval);
 	});
