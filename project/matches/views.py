@@ -1,10 +1,12 @@
 from django.http import JsonResponse
 from .models import Match
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from docu.tokens import verifyToken
 from transcendence.settings import SECRET_KEY
 
 # Create your views here.
+@csrf_exempt
 def allMatchs(response):
     try:
         token = response.headers['Authorization']
